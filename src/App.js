@@ -1,51 +1,48 @@
-var React = require('react');
-var TableStore = require('./js/stores/table-store');
-var Reflux = require('reflux');
-var Actions = require('./js/actions/app-actions');
-import {Router, Route} from 'react-router';
+
+import React from 'react/addons';
+import LoginStore from './js/stores/login-store.js'
+import{Router, Route} from 'react-router';
 import {history} from 'react-router/lib/HashHistory';
-//var HashHistory = require('react-router/lib/HashHistory');
+import AuthService from './js/services/AuthService.js'
+//import LoginActions from './js/actions/loginActions.js'
+var LoginActions = require('./js/actions/loginActions.js');
 
-//var HashHistory = require('react-router/lib/HashHistory');
+var AuthenticatedApp = require('./js/components/authenticatedApp.js');
 
+import Login from './js/components/login.js';
+import Signup from './js/components/signup.js';
+import Home from './js/components/home.js';
+import Quote from './js/components/quote.js';
 
-//var DefaultRoute = Router.DefaultRoute;
-var About = require('./js/components/test/about');
-var Home = require('./js/components/test/home');
-var Inbox = require('./js/components/test/inbox');
+import RouterContainer from './js/services/RouterContainer.js';
 
-
-var App = React.createClass({
-    mixins:[Reflux.connect(TableStore)],
-
-    componentDidMount(){
-
-
-
-        //Actions.loadPage();
-    },
-    render(){
-
-        return(
-            <div>
-                <h1>App asdfasd</h1>
-
-                {this.props.children}
-
-            </div>
-        );
-    }
-});
-
-console.log(history);
 var routes = (
-   <Router history={history}>
-       <Route path='/' component={App}>
-           <Route  path="about" component={About} />
-           <Route path="home" component={Home} />
+    <Router history={history}>
+        <Route component={AuthenticatedApp}>
+            <Route name="login" path="login" component={Login} />
+            <Route name="signup" path="signup" component={Signup} />
+            <Route path="/" name="home" component={Home} />
+            <Route name="quote" path="quote" component={Quote} />
+        </Route>
+    </Router>
 
-       </Route>
-   </Router>
 );
+//
 
-//React.render(routes, document.querySelector('#root'));
+
+var router = new Router();
+RouterContainer.set(router);
+console.log('router: ', router.getCurrentQuery);
+let jwt = localStorage.getItem('jwt');
+if(jwt){
+    LoginActions.loginUser.sync = true;
+    LoginActions.loginUser({jwt:jwt, user: 'alex'});
+}
+
+React.render(routes, document.getElementById('root'));
+
+
+//router.run(Handler =>{
+//    React.render(<Handler />, document.getElementById('root'));
+//});
+
