@@ -1,7 +1,7 @@
 react startkit
 =====================
 
-react && webpack && gulp && react-router && reflux SPA
+react && webpack && gulp && react-router && redux SPA Blog
 
 ### Usage
 
